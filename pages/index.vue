@@ -138,6 +138,7 @@ export default {
           const sheet = workbook.Sheets[sheetName]
           const jsonData = XLSX.utils.sheet_to_json(sheet)
 
+          this.calcData = []
           // 格式化并排序 json
           jsonData.forEach((item) => {
             if (item['Keyword Difficulty'] !== 0) {
