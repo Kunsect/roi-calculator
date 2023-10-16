@@ -2,7 +2,7 @@
   <div id="main" class="flex h-full min-h-screen w-full flex-col bg-dark-blue font-rubik">
     <main class="flex-grow">
       <div class="sm:mt24 mt-16 flex flex-col items-center justify-center px-4 text-white">
-        <div class="flex w-full max-w-5xl flex-col items-center justify-center">
+        <div class="flex w-full max-w-7xl flex-col items-center justify-center">
           <div class="flex flex-col items-center justify-center">
             <div class="flex w-full flex-col items-center justify-center space-y-2">
               <h1
