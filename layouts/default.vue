@@ -20,7 +20,7 @@
           <div class="hidden flex-row items-center justify-center space-x-4 sm:flex sm:space-x-10">
             <div class="flex flex-row items-center justify-center space-x-2 sm:space-x-4">
               <a
-                href="https://github.com/"
+                href="https://github.com/Kunsect/roi-calculator"
                 type="button"
                 class="flex w-full min-w-max flex-row items-center justify-center space-x-2 rounded-lg bg-medium-blue py-2 px-3 text-sm font-semibold text-white shadow-button-secondary transition-all duration-100 hover:bg-medium-blueHover active:bg-medium-blue sm:w-fit sm:px-5 sm:text-base"
               >
@@ -43,7 +43,7 @@
       <div class="flex w-full max-w-7xl flex-col items-center justify-center space-y-16">
         <div class="flex flex-col items-center justify-center space-y-4">
           <a
-            href="https://github.com/"
+            href="https://github.com/Kunsect/roi-calculator"
             rel="noopener noreferrer"
             target="_blank"
             class="transition-all duration-200 hover:-rotate-12 hover:scale-110 active:scale-90 active:duration-100"
