@@ -79,7 +79,9 @@
                     :key="index"
                     :class="{ 'bg-dark-medium-blue': index % 2 === 1 }"
                   >
-                    <td class="py-4 px-4 text-medium text-origin text-left break-words whitespace-normal max-w-xs overflow-auto">
+                    <td
+                      class="py-4 px-4 text-medium text-origin text-left break-words whitespace-normal max-w-xs overflow-auto"
+                    >
                       <a class="underline" :href="item.url" target="_blank">{{ item.keyword }}</a>
                     </td>
                     <td class="py-4 px-8 text-medium text-white text-center">
@@ -137,7 +139,7 @@ export default {
           const jsonData = XLSX.utils.sheet_to_json(sheet)
 
           // 格式化并排序 json
-          this.calcData = jsonData.map((item) => {
+          jsonData.forEach((item) => {
             if (item['Keyword Difficulty'] !== 0) {
               item.roi = (item.Volume * item['CPC (USD)']) / item['Keyword Difficulty']
             }
@@ -145,13 +147,15 @@ export default {
             if (!item.roi) item.roi = 0
             else item.roi = item.roi.toFixed(2)
 
-            return {
-              keyword: item.Keyword,
-              volumn: item.Volume,
-              kd: item['Keyword Difficulty'],
-              cpc: item['CPC (USD)'],
-              roi: item.roi,
-              url: 'https://www.google.com/search?q=' + item.Keyword
+            if (item.roi > 0) {
+              this.calcData.push({
+                keyword: item.Keyword,
+                volumn: item.Volume,
+                kd: item['Keyword Difficulty'],
+                cpc: item['CPC (USD)'],
+                roi: item.roi,
+                url: 'https://www.google.com/search?q=' + item.Keyword
+              })
             }
           })
 
