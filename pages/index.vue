@@ -79,7 +79,7 @@
                     :key="index"
                     :class="{ 'bg-dark-medium-blue': index % 2 === 1 }"
                   >
-                    <td class="py-4 px-4 text-medium text-origin text-left">
+                    <td class="py-4 px-4 text-medium text-origin text-left break-words whitespace-normal max-w-xs overflow-auto">
                       <a class="underline" :href="item.url" target="_blank">{{ item.keyword }}</a>
                     </td>
                     <td class="py-4 px-8 text-medium text-white text-center">
@@ -123,10 +123,11 @@ export default {
     },
 
     handleFileUpload(event) {
-      this.btnDisabled = true
       const file = event.target.files[0]
 
       if (file) {
+        this.btnDisabled = true
+
         const reader = new FileReader()
         reader.onload = (e) => {
           const data = e.target.result
