@@ -42,65 +42,7 @@
           </p>
           <input ref="fileInput" type="file" class="hidden" @change="handleFileUpload" />
 
-          <div v-if="calcData.length" class="mt-6 flex w-full flex-col space-y-8 sm:mt-12">
-            <div class="shadow-md rounded-lg p-2 mx-auto w-full">
-              <div class="flex justify-end mb-6">
-                <a
-                  type="button"
-                  class="flex w-full min-w-max flex-row items-center justify-center space-x-2 rounded-lg bg-medium-blue py-2 px-3 text-sm font-semibold text-white shadow-button-secondary transition-all duration-100 hover:bg-medium-blueHover active:bg-medium-blue sm:w-fit sm:px-5 sm:text-base"
-                  @click="exportProcessedData"
-                >
-                  <span>Export Excel</span>
-                </a>
-              </div>
-              <table class="min-w-full bg-medium-blue rounded-lg overflow-hidden">
-                <thead>
-                  <tr>
-                    <th class="py-4 px-4 text-medium bg-dark-medium-blue text-white text-left">
-                      Keyword
-                    </th>
-                    <th class="py-4 px-8 text-medium bg-dark-medium-blue text-white text-center">
-                      Volume
-                    </th>
-                    <th class="py-4 px-8 text-medium bg-dark-medium-blue text-white text-center">
-                      KD
-                    </th>
-                    <th class="py-4 px-8 text-medium bg-dark-medium-blue text-white text-center">
-                      CPC
-                    </th>
-                    <th class="py-4 px-8 text-medium bg-dark-medium-blue text-white text-center">
-                      优化回报率
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(item, index) in calcData"
-                    :key="index"
-                    :class="{ 'bg-dark-medium-blue': index % 2 === 1 }"
-                  >
-                    <td
-                      class="py-4 px-4 text-medium text-origin text-left break-words whitespace-normal max-w-xs overflow-auto"
-                    >
-                      <a class="underline" :href="item.url" target="_blank">{{ item.keyword }}</a>
-                    </td>
-                    <td class="py-4 px-8 text-medium text-white text-center">
-                      {{ item.volumn }}
-                    </td>
-                    <td class="py-4 px-8 text-medium text-white text-center">
-                      {{ item.kd }}
-                    </td>
-                    <td class="py-4 px-8 text-medium text-white text-center">
-                      {{ item.cpc }}
-                    </td>
-                    <td class="py-4 px-8 text-medium text-orange text-center font-bold">
-                      {{ item.roi }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <BaseTable ref="baseTable" />
         </div>
       </div>
     </main>
@@ -108,13 +50,11 @@
 </template>
 
 <script>
-import { saveAs } from 'file-saver'
 import * as XLSX from 'xlsx'
 
 export default {
   data() {
     return {
-      calcData: [],
       btnDisabled: false
     }
   },
@@ -138,59 +78,13 @@ export default {
           const sheet = workbook.Sheets[sheetName]
           const jsonData = XLSX.utils.sheet_to_json(sheet)
 
-          this.calcData = []
-          // 格式化并排序 json
-          jsonData.forEach((item) => {
-            if (item['Keyword Difficulty'] !== 0) {
-              item.roi = (item.Volume * item['CPC (USD)']) / item['Keyword Difficulty']
-            }
+          this.$refs.baseTable.processData(jsonData)
 
-            if (!item.roi) item.roi = 0
-            else item.roi = item.roi.toFixed(2)
-
-            if (item.roi > 0) {
-              this.calcData.push({
-                keyword: item.Keyword,
-                volumn: item.Volume,
-                kd: item['Keyword Difficulty'],
-                cpc: item['CPC (USD)'],
-                roi: item.roi,
-                url: 'https://www.google.com/search?q=' + item.Keyword
-              })
-            }
-          })
-
-          this.calcData.sort((a, b) => b.roi - a.roi)
           this.btnDisabled = false
         }
 
         reader.readAsBinaryString(file)
       }
-    },
-
-    exportProcessedData() {
-      // 创建一个新的工作簿对象
-      const wb = XLSX.utils.book_new()
-
-      // 将处理后的数据转换为一个工作表对象
-      const ws = XLSX.utils.json_to_sheet(this.calcData)
-
-      // 将工作表对象添加到工作簿中
-      XLSX.utils.book_append_sheet(wb, ws, 'Processed Data')
-
-      // 将工作簿对象写入一个二进制字符串
-      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
-
-      // 定义一个将二进制字符串转换为数组缓冲区的函数
-      function s2ab(s) {
-        const buf = new ArrayBuffer(s.length)
-        const view = new Uint8Array(buf)
-        for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff
-        return buf
-      }
-
-      // 使用 file-saver 库保存文件
-      saveAs(new Blob([s2ab(wbout)], { type: 'application/octet-stream' }), 'processed-data.xlsx')
     }
   }
 }

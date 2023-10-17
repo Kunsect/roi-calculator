@@ -1,10 +1,4 @@
-import axios from 'axios'
 require('dotenv').config()
-
-const nowDate = new Date()
-const formatDate = nowDate.getFullYear() + '-'
-  + (nowDate.getMonth() + 1).toString().padStart(2, 0) + '-'
-  + (nowDate.getDate()).toString().padStart(2, 0)
 
 export default {
   mode: 'universal',
@@ -29,7 +23,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/axios'
+    '~/plugins/axios',
+    '~/plugins/filters.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

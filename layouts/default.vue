@@ -8,15 +8,6 @@
           <a href="/" class="flex text-base text-white font-bold">
             <span class="text-orange">Keywords &nbsp;</span>ROI Calculator
           </a>
-          <button class="flex sm:hidden hidden" @click="mobileNavigationVisible = true">
-            <div
-              class="flex h-12 w-12 flex-col items-center justify-center space-y-2 rounded-lg p-2"
-            >
-              <div class="h-[2px] w-full rounded-full bg-grey"></div>
-              <div class="h-[2px] w-full rounded-full bg-grey"></div>
-              <div class="h-[2px] w-full rounded-full bg-grey"></div>
-            </div>
-          </button>
           <div class="hidden flex-row items-center justify-center space-x-4 sm:flex sm:space-x-10">
             <div class="flex flex-row items-center justify-center space-x-2 sm:space-x-4">
               <a
@@ -69,12 +60,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      mobileNavigationVisible: false
-    }
-  },
-
   head() {
     return {
       title: 'Keywords ROI Calculator',
@@ -85,12 +70,6 @@ export default {
           content: 'Import Semrush Excel to Generate ROI Table. | Keywords ROI Calculator'
         }
       ]
-    }
-  },
-
-  methods: {
-    hiddenMobileNavigation() {
-      this.mobileNavigationVisible = false
     }
   }
 }
