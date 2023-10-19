@@ -20,6 +20,7 @@ module.exports = {
         'to-dark-blue-80': theme('colors.dark-blue.80', 'rgba(#12151e, 0.8)')
       }),
       borderColor: {
+        'grey': '#8f94a3',
         'orange': '#cc5514',
         'medium-blue': '#2c3349'
       },

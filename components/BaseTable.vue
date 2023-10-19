@@ -34,6 +34,30 @@
             >
               <span class="text-grey cursor-pointer">{{ item[0] }}-{{ item[1] }}%</span>
             </div>
+
+            <div class="border-t border-grey m-2"></div>
+
+            <div class="px-2 py-1.5 space-y-2">
+              <span class="text-white">定制范围</span>
+              <input
+                v-model="kd.min"
+                type="number"
+                class="w-full rounded-lg bg-dark-medium-blue px-4 py-2 text-sm text-white focus:outline-none"
+                placeholder="从"
+              />
+              <input
+                v-model="kd.max"
+                type="number"
+                class="w-full rounded-lg bg-dark-medium-blue px-4 py-2 text-sm text-white focus:outline-none"
+                placeholder="到"
+              />
+              <button
+                class="w-full py-1.5 items-center justify-center rounded-lg bg-orange text-sm font-medium text-white shadow-button-primary transition-all duration-100 hover:bg-orangeHover active:bg-orange"
+                @click="updateKd([kd.min, kd.max])"
+              >
+                应用
+              </button>
+            </div>
           </div>
         </div>
 
@@ -44,13 +68,13 @@
             @click="volume.visible = !volume.visible"
           >
             <div v-if="volume.values.length" class="flex">
-              <span v-if="volume.values[0] === 100001" class="mr-2">Volume: 100,000+</span>
-              <span v-else class="mr-2"
-                >Volume: {{ volume.values[0] | formatNumber }}-{{
-                  volume.values[1] | formatNumber
-                }}
-                &nbsp;</span
-              >
+              <span v-if="volume.values[1] === 99999999" class="mr-2">
+                Volume: {{ volume.values[0] | formatNumber }}+
+              </span>
+              <span v-else class="mr-2">
+                Volume: {{ volume.values[0] | formatNumber }}-{{ volume.values[1] | formatNumber }}
+                &nbsp;
+              </span>
               <img src="~/assets/icons/close.svg" width="14" @click.stop="updateVolume([])" />
             </div>
 
@@ -69,10 +93,36 @@
               class="flex px-4 py-2"
               @click="updateVolume(item)"
             >
-              <span v-if="index === 0" class="text-grey cursor-pointer">100,000+</span>
-              <span v-else class="text-grey cursor-pointer"
-                >{{ item[0] | formatNumber }}-{{ item[1] | formatNumber }}</span
+              <span v-if="item[1] === 99999999" class="text-grey cursor-pointer">
+                {{ item[0] | formatNumber }}+
+              </span>
+              <span v-else class="text-grey cursor-pointer">
+                {{ item[0] | formatNumber }}-{{ item[1] | formatNumber }}
+              </span>
+            </div>
+
+            <div class="border-t border-grey m-2"></div>
+
+            <div class="px-2 py-1.5 space-y-2">
+              <span class="text-white">定制范围</span>
+              <input
+                v-model="volume.min"
+                type="number"
+                class="w-full rounded-lg bg-dark-medium-blue px-4 py-2 text-sm text-white focus:outline-none"
+                placeholder="从"
+              />
+              <input
+                v-model="volume.max"
+                type="number"
+                class="w-full rounded-lg bg-dark-medium-blue px-4 py-2 text-sm text-white focus:outline-none"
+                placeholder="到"
+              />
+              <button
+                class="w-full py-1.5 items-center justify-center rounded-lg bg-orange text-sm font-medium text-white shadow-button-primary transition-all duration-100 hover:bg-orangeHover active:bg-orange"
+                @click="updateVolume([volume.min, volume.max])"
               >
+                应用
+              </button>
             </div>
           </div>
         </div>
@@ -147,7 +197,9 @@ export default {
           [30, 49],
           [15, 29],
           [0, 14]
-        ]
+        ],
+        min: '',
+        max: ''
       },
 
       volume: {
@@ -160,7 +212,9 @@ export default {
           [101, 1000],
           [11, 100],
           [1, 10]
-        ]
+        ],
+        min: '',
+        max: ''
       }
     }
   },
@@ -191,18 +245,32 @@ export default {
       this.filterOriginalArr()
     },
 
-    updateKd(row) {
-      this.kd.values = row
+    updateKd(rangeArr) {
+      rangeArr = this.adjustRangeArr(rangeArr, 0, 100)
+
+      this.kd.values = rangeArr
       this.kd.visible = false
 
       this.filterOriginalArr()
     },
 
-    updateVolume(row) {
-      this.volume.values = row
+    updateVolume(rangeArr) {
+      rangeArr = this.adjustRangeArr(rangeArr, 0, 99999999)
+
+      this.volume.values = rangeArr
       this.volume.visible = false
 
       this.filterOriginalArr()
+    },
+
+    adjustRangeArr(rangeArr, minValue, maxValue) {
+      if (rangeArr.length) {
+        rangeArr[0] = parseInt(rangeArr[0] || minValue)
+        rangeArr[1] = parseInt(rangeArr[1] || maxValue)
+        if (rangeArr[0] > rangeArr[1]) rangeArr = [rangeArr[1], rangeArr[0]]
+      }
+
+      return rangeArr
     },
 
     filterOriginalArr() {
